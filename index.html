@@ -1,57 +1,368 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SLIVE RADYO</title>
+<meta name="description" content="SLIVE RADYO - internet radyo ve canlı yayın platformu">
 <style>
-:root{--bg:#090611;--p:#151020;--p2:#1d162b;--t:#f7f2ff;--m:#aaa0b8;--a:#c56cff;--a2:#7c4dff;--d:#ff4d6d;--l:#2d2438}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#24103a,#090611 48%);color:var(--t);font-family:Inter,system-ui,sans-serif}.wrap{max-width:1120px;margin:auto;padding:18px}button,input{font:inherit}
-header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 18px}.logo{font-size:24px;font-weight:900}.logo span{color:var(--a)}.live{font-size:11px;font-weight:800;border:1px solid #542437;background:#21101a;padding:8px 12px;border-radius:99px}.dot{display:inline-block;width:8px;height:8px;background:var(--d);border-radius:50%;margin-right:6px}
-nav{display:flex;gap:8px;margin-bottom:18px}.nav,.action,.btn{border:1px solid var(--l);background:var(--p2);color:#fff;border-radius:11px;padding:10px 13px;cursor:pointer}.nav.active,.save,.btn.main{background:linear-gradient(135deg,var(--a2),var(--a));border-color:transparent}.panel{display:none}.panel.active{display:block}
-.hero,.grid,.admin{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.grid{grid-template-columns:1fr 1fr;margin-top:18px}.card{background:linear-gradient(145deg,#181122,#100b18);border:1px solid var(--l);border-radius:22px;box-shadow:0 20px 60px #0005}.now{padding:26px;min-height:390px;display:flex;flex-direction:column;justify-content:space-between}.side,.section{padding:21px}.eyebrow{color:var(--a);font-size:11px;font-weight:900;letter-spacing:1.5px}.title{font-size:clamp(34px,6vw,62px);line-height:.98;margin:10px 0;font-weight:950}.muted,.sub{color:var(--m);font-size:13px}
-.disc{width:205px;height:205px;border-radius:50%;margin:8px auto 18px;background:repeating-radial-gradient(circle,#181818 0 5px,#2d2d2d 6px 7px);border:10px solid #0b0b0b;box-shadow:0 0 0 2px #3a3044,0 20px 50px #0008;animation:spin 7s linear infinite;animation-play-state:paused;position:relative}.disc.playing{animation-play-state:running}.disc:after{content:"SLIVE";position:absolute;inset:60px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:grid;place-items:center;font-weight:900}
-input[type=range]{width:100%;accent-color:var(--a)}.times,.status,.track,.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--l)}.times{font-size:10px;color:var(--m)}.controls{display:flex;justify-content:center;gap:9px;margin:12px}.btn{width:44px;height:44px;border-radius:50%;padding:0}.btn.main{width:56px;height:56px;font-size:18px}.vol{display:flex;gap:8px;align-items:center}.track b{font-size:13px}.track small{display:block;color:var(--m);font-size:10px}.badge{font-size:10px;padding:5px 8px;border-radius:99px;background:#282033}.ok{background:#11251b;color:#aaffd0}.empty{color:var(--m);font-size:12px;padding:18px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}input[type=file]{display:none}
-.admin{grid-template-columns:1fr 1fr}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;color:var(--m)}.field input,.field select{background:#0e0a15;color:#fff;border:1px solid var(--l);border-radius:10px;padding:10px}.save{color:#fff;border:0;border-radius:11px;padding:11px 15px;cursor:pointer;font-weight:800}.danger{border:1px solid #633044;background:#24101a;color:#fff;border-radius:10px;padding:8px 11px;cursor:pointer}.slot{padding:11px;border:1px solid var(--l);border-radius:10px;margin:7px 0;background:#120d1a}.slot strong{color:var(--a)}footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
-@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:780px){.hero,.grid,.admin{grid-template-columns:1fr}.disc{width:170px;height:170px}.disc:after{inset:49px}}
+:root{--bg:#090611;--p:#151020;--p2:#1d162b;--t:#f7f2ff;--m:#aaa0b8;--a:#c56cff;--a2:#7c4dff;--d:#ff4d6d;--ok:#49e29a;--l:#2d2438}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -10%,#24103a,#090611 48%);color:var(--t);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}
+.wrap{max-width:1120px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0 18px;gap:12px}
+.logo{font-size:24px;font-weight:900}.logo span{color:var(--a)}
+.live{font-size:11px;font-weight:800;border:1px solid #542437;background:#21101a;padding:8px 12px;border-radius:99px;white-space:nowrap}
+.dot{display:inline-block;width:8px;height:8px;background:var(--d);border-radius:50%;margin-right:6px}
+.dot.ok{background:var(--ok);box-shadow:0 0 10px var(--ok)}
+nav{display:flex;gap:8px;margin-bottom:18px}
+.nav,.action,.btn{border:1px solid var(--l);background:var(--p2);color:#fff;border-radius:11px;padding:10px 13px;cursor:pointer}
+.nav.active,.save,.btn.main{background:linear-gradient(135deg,var(--a2),var(--a));border-color:transparent}
+.nav:hover,.action:hover,.btn:hover{border-color:var(--a)}
+.panel{display:none}.panel.active{display:block}
+.hero,.grid,.admin{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+.grid{grid-template-columns:1fr 1fr;margin-top:18px}
+.card{background:linear-gradient(145deg,#181122,#100b18);border:1px solid var(--l);border-radius:22px;box-shadow:0 20px 60px #0005}
+.now{padding:26px;min-height:390px;display:flex;flex-direction:column;justify-content:space-between}
+.side,.section{padding:21px}
+.eyebrow{color:var(--a);font-size:11px;font-weight:900;letter-spacing:1.5px}
+.title{font-size:clamp(34px,6vw,62px);line-height:.98;margin:10px 0;font-weight:950;word-break:break-word}
+.muted,.sub{color:var(--m);font-size:13px}
+.disc{width:205px;height:205px;border-radius:50%;margin:8px auto 18px;background:repeating-radial-gradient(circle,#181818 0 5px,#2d2d2d 6px 7px);border:10px solid #0b0b0b;box-shadow:0 0 0 2px #3a3044,0 20px 50px #0008;animation:spin 7s linear infinite;animation-play-state:paused;position:relative}
+.disc.playing{animation-play-state:running}
+.disc:after{content:"SLIVE";position:absolute;inset:60px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--a2));display:grid;place-items:center;font-weight:900}
+input[type=range]{width:100%;accent-color:var(--a)}
+.times,.status,.track,.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--l)}
+.times{font-size:10px;color:var(--m)}
+.controls{display:flex;justify-content:center;gap:9px;margin:12px}
+.btn{width:44px;height:44px;border-radius:50%;padding:0}.btn.main{width:56px;height:56px;font-size:18px}
+.vol{display:flex;gap:8px;align-items:center}.track b{font-size:13px}.track small{display:block;color:var(--m);font-size:10px}
+.badge{font-size:10px;padding:5px 8px;border-radius:99px;background:#282033;white-space:nowrap}
+.ok{background:#11251b;color:#aaffd0}.warn{background:#2b2110;color:#ffd98a}.empty{color:var(--m);font-size:12px;padding:18px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+input[type=file]{display:none}
+.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;color:var(--m)}
+.field input,.field select{background:#0e0a15;color:#fff;border:1px solid var(--l);border-radius:10px;padding:10px;width:100%}
+.save{color:#fff;border:0;border-radius:11px;padding:11px 15px;cursor:pointer;font-weight:800}
+.danger{border:1px solid #633044;background:#24101a;color:#fff;border-radius:10px;padding:7px 10px;cursor:pointer}
+.slot{padding:11px;border:1px solid var(--l);border-radius:10px;margin:7px 0;background:#120d1a}
+.slot strong{color:var(--a)}
+.track-actions{display:flex;align-items:center;gap:8px}
+.notice{border:1px solid #3c2b50;background:#120d1a;padding:10px 12px;border-radius:10px;color:var(--m);font-size:11px;margin-top:12px}
+.toast{position:fixed;right:18px;bottom:18px;background:#20152e;border:1px solid var(--a);padding:12px 15px;border-radius:12px;box-shadow:0 12px 35px #0008;display:none;z-index:20;font-size:12px}
+footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:780px){.hero,.grid,.admin{grid-template-columns:1fr}.disc{width:170px;height:170px}.disc:after{inset:49px}.wrap{padding:12px}header{align-items:flex-start}.logo{font-size:20px}.live{font-size:9px;padding:7px 9px}}
 </style>
 </head>
-<body><div class="wrap">
-<header><div class="logo">🎧 <span>SLIVE</span> RADYO</div><div class="live"><i class="dot"></i><span id="liveText">CANLI ALTYAPI HAZIR</span></div></header>
-<nav><button class="nav active" data-tab="radio">🎧 Radyo</button><button class="nav" data-tab="admin">🔐 Kontrol Merkezi</button></nav>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">🎧 <span>SLIVE</span> RADYO</div>
+  <div class="live"><i class="dot" id="liveDot"></i><span id="liveText">CANLI ALTYAPI HAZIR</span></div>
+</header>
+
+<nav>
+  <button class="nav active" data-tab="radio">🎧 Radyo</button>
+  <button class="nav" data-tab="admin">🔐 Kontrol Merkezi</button>
+</nav>
 
 <section id="radio" class="panel active">
 <div class="hero">
-<div class="card now"><div><div class="eyebrow">ŞİMDİ ÇALIYOR</div><div class="title" id="title">SLIVE RADYO</div><div class="sub" id="artist">Yayın sunucusu bağlandığında gerçek yayın burada görünecek.</div></div>
-<div><div class="disc" id="disc"></div><audio id="audio"></audio><input id="seek" type="range" min="0" max="100" value="0"><div class="times"><span id="cur">0:00</span><span id="dur">0:00</span></div><div class="controls"><button class="btn" id="prev">⏮</button><button class="btn main" id="play">▶</button><button class="btn" id="next">⏭</button><button class="btn" id="shuffle">🔀</button></div><div class="vol">🔊 <input id="vol" type="range" min="0" max="1" step=".01" value=".8"></div></div></div>
-<div class="card side"><h2>⏭ Sıradaki</h2><div id="up"><div class="empty">Henüz playlist eklenmedi.</div></div><h2 style="margin-top:20px">📡 Yayın Durumu</h2><div class="status"><span>Web player</span><span class="badge ok">HAZIR</span></div><div class="status"><span>Gerçek stream</span><span class="badge" id="streamState">VPS BEKLİYOR</span></div><div class="status"><span>AutoDJ</span><span class="badge">VPS BEKLİYOR</span></div><div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div></div></div>
+<div class="card now">
+  <div>
+    <div class="eyebrow" id="modeLabel">ŞİMDİ ÇALIYOR</div>
+    <div class="title" id="title">SLIVE RADYO</div>
+    <div class="sub" id="artist">Yerel demo playlist veya gerçek stream bağlandığında burada görünecek.</div>
+  </div>
+  <div>
+    <div class="disc" id="disc"></div>
+    <audio id="audio" preload="metadata"></audio>
+    <input id="seek" type="range" min="0" max="100" value="0">
+    <div class="times"><span id="cur">0:00</span><span id="dur">0:00</span></div>
+    <div class="controls">
+      <button class="btn" id="prev" title="Önceki">⏮</button>
+      <button class="btn main" id="play" title="Oynat">▶</button>
+      <button class="btn" id="next" title="Sonraki">⏭</button>
+      <button class="btn" id="shuffle" title="Karıştır">🔀</button>
+    </div>
+    <div class="vol">🔊 <input id="vol" type="range" min="0" max="1" step=".01" value=".8"></div>
+  </div>
+</div>
+
+<div class="card side">
+  <h2>⏭ Sıradaki</h2>
+  <div id="up"><div class="empty">Henüz playlist eklenmedi.</div></div>
+  <h2 style="margin-top:20px">📡 Yayın Durumu</h2>
+  <div class="status"><span>Web player</span><span class="badge ok">HAZIR</span></div>
+  <div class="status"><span>Gerçek stream</span><span class="badge" id="streamState">VPS BEKLİYOR</span></div>
+  <div class="status"><span>AutoDJ</span><span class="badge">VPS BEKLİYOR</span></div>
+  <div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div>
+  <div class="notice">💡 Playlist artık tarayıcıda kalıcı saklanabilir. Gerçek 24/7 yayın için ileride VPS + yayın sunucusu bağlanacak.</div>
+</div>
+</div>
 
 <div class="grid">
-<div class="card section"><h2>🎵 Playlist</h2><div class="actions"><label class="action" for="files">+ MP3 Ekle</label><input id="files" type="file" accept="audio/*" multiple><button class="action" id="clear">Temizle</button></div><div id="list"><div class="empty">MP3 eklediğinde burada görünecek.</div></div></div>
-<div class="card section"><h2>🕘 Son Çalanlar</h2><div id="history"><div class="empty">Henüz parça çalmadı.</div></div></div>
-<div class="card section"><h2>📅 Program Akışı</h2><div id="scheduleView"></div></div>
-<div class="card section"><h2>📊 Sistem</h2><div class="status"><span>İstasyon</span><span class="badge ok">SLIVE RADYO</span></div><div class="status"><span>Sürüm</span><span class="badge">v0.3</span></div><div class="status"><span>Sunucu</span><span class="badge" id="serverBadge">Henüz bağlı değil</span></div></div>
-</div></section>
+<div class="card section">
+  <h2>🎵 Playlist</h2>
+  <div class="actions">
+    <label class="action" for="files">+ MP3 Ekle</label>
+    <input id="files" type="file" accept="audio/*" multiple>
+    <button class="action" id="clear">Temizle</button>
+  </div>
+  <div id="list"><div class="empty">MP3 eklediğinde burada görünecek.</div></div>
+</div>
+
+<div class="card section">
+  <h2>🕘 Son Çalanlar</h2>
+  <div id="history"><div class="empty">Henüz parça çalmadı.</div></div>
+</div>
+
+<div class="card section">
+  <h2>📅 Program Akışı</h2>
+  <div id="scheduleView"></div>
+</div>
+
+<div class="card section">
+  <h2>📊 Sistem</h2>
+  <div class="status"><span>İstasyon</span><span class="badge ok" id="stationBadge">SLIVE RADYO</span></div>
+  <div class="status"><span>Sürüm</span><span class="badge">v0.4</span></div>
+  <div class="status"><span>Playlist saklama</span><span class="badge ok">AKTİF</span></div>
+  <div class="status"><span>Sunucu</span><span class="badge" id="serverBadge">Henüz bağlı değil</span></div>
+</div>
+</div>
+</section>
 
 <section id="admin" class="panel">
 <div class="admin">
-<div class="card section"><h2>🔐 Radyo Kontrol Merkezi</h2><p class="muted">VPS geldiğinde gerçek yayın ayarlarını buradan bağlayacağız.</p><div class="field"><label>İstasyon adı</label><input id="station" value="SLIVE RADYO"></div><div class="field"><label>Stream URL</label><input id="stream" placeholder="https://radio.ornek.com/stream"></div><div class="field"><label>Sunucu durumu</label><select id="server"><option value="offline">VPS henüz bağlı değil</option><option value="online">Yayın sunucusu bağlı</option></select></div><button class="save" id="save">Ayarları Kaydet</button></div>
-<div class="card section"><h2>🎙️ DJ Merkezi</h2><div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div><div class="status"><span>Mikrofon</span><span class="badge">VPS GEREKLİ</span></div><div class="status"><span>AutoDJ</span><span class="badge">VPS GEREKLİ</span></div><p class="muted">Sunucu kurulduğunda canlı DJ bağlantısı ve AutoDJ burada aktive edilecek.</p></div>
-<div class="card section"><h2>🎵 Playlist Yönetimi</h2><div class="actions"><label class="action" for="files2">MP3 Seç</label><input id="files2" type="file" accept="audio/*" multiple><button class="danger" id="clear2">Playlisti Sıfırla</button></div><div id="adminList" class="empty">Henüz parça yok.</div></div>
-<div class="card section"><h2>📅 Program Yönetimi</h2><div class="field"><label>Saat</label><input id="time" type="time" value="21:00"></div><div class="field"><label>Program adı</label><input id="name" value="Soner ile Canlı"></div><button class="save" id="add">Programa Ekle</button><div id="adminSchedule"></div></div>
-</div></section>
-<footer>SLIVE RADYO • v0.3 • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer></div>
+<div class="card section">
+  <h2>🔐 Radyo Kontrol Merkezi</h2>
+  <p class="muted">İstasyon ayarları bu tarayıcıda saklanır. VPS geldiğinde gerçek yayın bağlantısını buradan kullanacağız.</p>
+  <div class="field"><label>İstasyon adı</label><input id="station" value="SLIVE RADYO"></div>
+  <div class="field"><label>Stream URL</label><input id="stream" placeholder="https://radio.ornek.com/stream"></div>
+  <div class="field"><label>Sunucu durumu</label><select id="server"><option value="offline">VPS henüz bağlı değil</option><option value="online">Yayın sunucusu bağlı</option></select></div>
+  <div class="actions">
+    <button class="save" id="save">Ayarları Kaydet</button>
+    <button class="action" id="connect">Stream'i Bağla</button>
+  </div>
+  <div class="notice">Gerçek stream seçildiğinde yerel MP3 modu kapanır ve player stream'i dinlemeye geçer. VPS olmadan bu alan sadece hazırlık amaçlıdır.</div>
+</div>
+
+<div class="card section">
+  <h2>🎙️ DJ Merkezi</h2>
+  <div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div>
+  <div class="status"><span>Mikrofon</span><span class="badge">VPS GEREKLİ</span></div>
+  <div class="status"><span>AutoDJ</span><span class="badge">VPS GEREKLİ</span></div>
+  <p class="muted">Sunucu kurulduğunda canlı DJ bağlantısı, mikrofon ve AutoDJ burada aktive edilecek.</p>
+</div>
+
+<div class="card section">
+  <h2>🎵 Playlist Yönetimi</h2>
+  <div class="actions">
+    <label class="action" for="files2">MP3 Seç</label>
+    <input id="files2" type="file" accept="audio/*" multiple>
+    <button class="danger" id="clear2">Playlisti Sıfırla</button>
+  </div>
+  <div id="adminList" class="empty">Henüz parça yok.</div>
+</div>
+
+<div class="card section">
+  <h2>📅 Program Yönetimi</h2>
+  <div class="field"><label>Saat</label><input id="time" type="time" value="21:00"></div>
+  <div class="field"><label>Program adı</label><input id="name" value="Soner ile Canlı"></div>
+  <button class="save" id="add">Programa Ekle</button>
+  <div id="adminSchedule"></div>
+</div>
+</div>
+</section>
+
+<footer>SLIVE RADYO • v0.4 • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer>
+</div>
+<div class="toast" id="toast"></div>
+
 <script>
-const $=x=>document.getElementById(x),audio=$("audio"),disc=$("disc"),play=$("play"),seek=$("seek"),vol=$("vol");let tracks=[],idx=0,hist=[],shuffle=false,schedule=JSON.parse(localStorage.getItem("slive_schedule")||"null")||[{time:"00:00",name:"Gece Yayını"},{time:"12:00",name:"SLIVE Öğle"},{time:"18:00",name:"Akşam Seçkisi"},{time:"21:00",name:"Soner ile Canlı"}];
-const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
-function render(){list.innerHTML=tracks.length?tracks.map((t,i)=>'<div class="track"><span>'+(i+1)+'</span><b>'+t.name+'</b></div>').join(""):'<div class="empty">MP3 eklediğinde burada görünecek.</div>';adminList.innerHTML=list.innerHTML;up.innerHTML=tracks.length?tracks.map((t,i)=>({t,i})).filter(x=>x.i!==idx).slice(0,4).map(x=>'<div class="track"><span>'+(x.i+1)+'</span><b>'+x.t.name+'</b></div>').join(""):'<div class="empty">Henüz playlist eklenmedi.</div>';history.innerHTML=hist.length?hist.slice(-6).reverse().map(x=>'<div class="track"><b>'+x+'</b></div>').join(""):'<div class="empty">Henüz parça çalmadı.</div>';scheduleView.innerHTML=schedule.map(s=>'<div class="slot"><strong>'+s.time+'</strong> • '+s.name+'</div>').join("");adminSchedule.innerHTML=schedule.map((s,i)=>'<div class="row"><span>'+s.time+' • '+s.name+'</span><button class="danger" onclick="delSlot('+i+')">Sil</button></div>').join("")}
-window.delSlot=i=>{schedule.splice(i,1);localStorage.setItem("slive_schedule",JSON.stringify(schedule));render()};
-function load(i,auto=false){if(!tracks.length)return;idx=(i+tracks.length)%tracks.length;audio.src=tracks[idx].url;title.textContent=tracks[idx].name;artist.textContent="SLIVE RADYO • Yerel demo yayın";seek.value=0;render();if(auto)audio.play()}
-function addHist(){if(tracks.length){hist.push(tracks[idx].name);if(hist.length>20)hist.shift();render()}}
-play.onclick=()=>{if(!tracks.length)return alert("Önce MP3 ekle.");audio.paused?audio.play():audio.pause()};audio.onplay=()=>{play.textContent="⏸";disc.classList.add("playing");liveText.textContent="DEMO CANLI"};audio.onpause=()=>{play.textContent="▶";disc.classList.remove("playing")};audio.ontimeupdate=()=>{if(audio.duration)seek.value=audio.currentTime/audio.duration*100;cur.textContent=fmt(audio.currentTime)};audio.onloadedmetadata=()=>dur.textContent=fmt(audio.duration);audio.onended=()=>{addHist();load(shuffle?Math.floor(Math.random()*tracks.length):idx+1,true)};seek.oninput=()=>{if(audio.duration)audio.currentTime=seek.value/100*audio.duration};vol.oninput=()=>audio.volume=vol.value;
-next.onclick=()=>{addHist();load(shuffle?Math.floor(Math.random()*tracks.length):idx+1,true)};prev.onclick=()=>load(idx-1,true);shuffle.onclick=()=>{shuffle=!shuffle;shuffle.style.borderColor=shuffle?"var(--a)":"var(--l)"};
-function addFiles(fs){[...fs].forEach(f=>tracks.push({name:f.name,url:URL.createObjectURL(f)}));if(tracks.length===fs.length)load(0);render()}files.onchange=e=>addFiles(e.target.files);files2.onchange=e=>addFiles(e.target.files);function clearAll(){tracks.forEach(t=>URL.revokeObjectURL(t.url));tracks=[];audio.pause();audio.removeAttribute("src");title.textContent="SLIVE RADYO";artist.textContent="Yayın sunucusu bağlandığında gerçek yayın burada görünecek.";render()}clear.onclick=clearAll;clear2.onclick=clearAll;
-document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
-save.onclick=()=>{localStorage.setItem("slive_config",JSON.stringify({station:station.value,stream:stream.value,server:server.value}));serverBadge.textContent=server.value==="online"?"Yayın sunucusu bağlı":"Henüz bağlı değil";streamState.textContent=server.value==="online"?"BAĞLI":"VPS BEKLİYOR";alert("Ayarlar kaydedildi.")};
-add.onclick=()=>{if(!time.value||!name.value)return;schedule.push({time:time.value,name:name.value});schedule.sort((a,b)=>a.time.localeCompare(b.time));localStorage.setItem("slive_schedule",JSON.stringify(schedule));render()};
-const c=JSON.parse(localStorage.getItem("slive_config")||"null");if(c){station.value=c.station||"SLIVE RADYO";stream.value=c.stream||"";server.value=c.server||"offline";serverBadge.textContent=c.server==="online"?"Yayın sunucusu bağlı":"Henüz bağlı değil";streamState.textContent=c.server==="online"?"BAĞLI":"VPS BEKLİYOR"}render();
-</script></body></html>
+const $=id=>document.getElementById(id);
+const audio=$("audio"),disc=$("disc"),play=$("play"),seek=$("seek"),vol=$("vol");
+let tracks=[],idx=0,hist=JSON.parse(localStorage.getItem("slive_history")||"[]"),shuffle=false;
+let schedule=JSON.parse(localStorage.getItem("slive_schedule")||"null")||[
+ {time:"00:00",name:"Gece Yayını"},{time:"12:00",name:"SLIVE Öğle"},
+ {time:"18:00",name:"Akşam Seçkisi"},{time:"21:00",name:"Soner ile Canlı"}
+];
+let db=null;
+
+function toast(msg){
+  const t=$("toast");t.textContent=msg;t.style.display="block";
+  clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display="none",2200);
+}
+function fmt(s){s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function esc(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function render(){
+  $("list").innerHTML=tracks.length?tracks.map((t,i)=>`
+    <div class="track"><span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>Kalıcı yerel parça</small></div>
+      <div class="track-actions"><button class="danger" onclick="removeTrack(${i})">Sil</button></div>
+    </div>`).join(""):'<div class="empty">MP3 eklediğinde burada görünecek.</div>';
+  $("adminList").innerHTML=tracks.length?tracks.map((t,i)=>`
+    <div class="track"><span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>Kalıcı yerel parça</small></div>
+      <button class="danger" onclick="removeTrack(${i})">Sil</button></div>`).join(""):'<div class="empty">Henüz parça yok.</div>';
+  const next=tracks.length?tracks.map((t,i)=>({t,i})).filter(x=>x.i!==idx).slice(0,4):[];
+  $("up").innerHTML=next.length?next.map(x=>`<div class="track"><span>${x.i+1}</span><div><b>${esc(x.t.name)}</b><small>Playlist</small></div></div>`).join(""):'<div class="empty">Henüz playlist eklenmedi.</div>';
+  $("history").innerHTML=hist.length?hist.slice(-6).reverse().map(x=>`<div class="track"><b>${esc(x)}</b><small>Çalındı</small></div>`).join(""):'<div class="empty">Henüz parça çalmadı.</div>';
+  $("scheduleView").innerHTML=schedule.map(s=>`<div class="slot"><strong>${esc(s.time)}</strong> • ${esc(s.name)}</div>`).join("");
+  $("adminSchedule").innerHTML=schedule.map((s,i)=>`<div class="row"><span>${esc(s.time)} • ${esc(s.name)}</span><button class="danger" onclick="delSlot(${i})">Sil</button></div>`).join("");
+}
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open("slive_radio_v04",1);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains("tracks"))d.createObjectStore("tracks",{keyPath:"id",autoIncrement:true});
+    };
+    req.onsuccess=e=>{db=e.target.result;resolve(db)};
+    req.onerror=()=>reject(req.error);
+  });
+}
+function getAllTracks(){
+  return new Promise((resolve,reject)=>{
+    const req=db.transaction("tracks","readonly").objectStore("tracks").getAll();
+    req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error);
+  });
+}
+function putTrack(name,blob){
+  return new Promise((resolve,reject)=>{
+    const req=db.transaction("tracks","readwrite").objectStore("tracks").add({name,blob});
+    req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+  });
+}
+function deleteTrackDB(id){
+  return new Promise((resolve,reject)=>{
+    const req=db.transaction("tracks","readwrite").objectStore("tracks").delete(id);
+    req.onsuccess=()=>resolve();req.onerror=()=>reject(req.error);
+  });
+}
+function clearDB(){
+  return new Promise((resolve,reject)=>{
+    const req=db.transaction("tracks","readwrite").objectStore("tracks").clear();
+    req.onsuccess=()=>resolve();req.onerror=()=>reject(req.error);
+  });
+}
+
+async function loadSavedTracks(){
+  try{
+    const saved=await getAllTracks();
+    tracks=saved.map(x=>({id:x.id,name:x.name,blob:x.blob,url:URL.createObjectURL(x.blob)}));
+    render();
+  }catch(e){toast("Playlist yüklenemedi");}
+}
+
+function load(i,auto=false){
+  if(!tracks.length)return;
+  idx=(i+tracks.length)%tracks.length;
+  audio.src=tracks[idx].url;
+  $("title").textContent=tracks[idx].name;
+  $("artist").textContent="SLIVE RADYO • Yerel demo yayın";
+  $("modeLabel").textContent="ŞİMDİ ÇALIYOR";
+  seek.value=0;render();
+  if(auto)audio.play().catch(()=>{});
+}
+function addHist(){
+  if(!tracks.length)return;
+  hist.push(tracks[idx].name);if(hist.length>30)hist.shift();
+  localStorage.setItem("slive_history",JSON.stringify(hist));render();
+}
+async function addFiles(fs){
+  const files=[...fs];if(!files.length)return;
+  try{
+    for(const f of files)await putTrack(f.name,f);
+    await loadSavedTracks();
+    if(tracks.length===files.length)load(0);
+    toast(files.length+" parça playlist'e eklendi");
+  }catch(e){toast("Parçalar kaydedilemedi");}
+}
+window.removeTrack=async i=>{
+  const t=tracks[i];if(!t)return;
+  if(t.id)await deleteTrackDB(t.id);
+  URL.revokeObjectURL(t.url);
+  tracks.splice(i,1);
+  if(!tracks.length){audio.pause();audio.removeAttribute("src");$("title").textContent=$("station").value||"SLIVE RADYO";$("artist").textContent="Playlist boş."}
+  else if(i===idx){idx=Math.min(idx,tracks.length-1);load(idx)}
+  else if(i<idx)idx--;
+  render();toast("Parça silindi");
+};
+async function clearAll(){
+  if(!confirm("Tüm yerel playlist silinsin mi?"))return;
+  await clearDB();tracks.forEach(t=>URL.revokeObjectURL(t.url));tracks=[];
+  audio.pause();audio.removeAttribute("src");idx=0;
+  $("title").textContent=$("station").value||"SLIVE RADYO";$("artist").textContent="Playlist boş.";
+  render();toast("Playlist temizlendi");
+}
+
+play.onclick=()=>{
+  if($("server").value==="online" && $("stream").value.trim() && audio.src===location.href){
+    connectStream();return;
+  }
+  if(!tracks.length){toast("Önce MP3 ekle veya gerçek stream bağla.");return}
+  audio.paused?audio.play().catch(()=>{}):audio.pause();
+};
+audio.onplay=()=>{play.textContent="⏸";disc.classList.add("playing");$("liveText").textContent=$("server").value==="online"?"GERÇEK STREAM":"DEMO CANLI";$("liveDot").classList.add("ok")};
+audio.onpause=()=>{play.textContent="▶";disc.classList.remove("playing");$("liveDot").classList.remove("ok")};
+audio.ontimeupdate=()=>{if(audio.duration&&isFinite(audio.duration))seek.value=audio.currentTime/audio.duration*100;$("cur").textContent=fmt(audio.currentTime)};
+audio.onloadedmetadata=()=>{if(isFinite(audio.duration))$("dur").textContent=fmt(audio.duration)};
+audio.onended=()=>{addHist();if(tracks.length)load(shuffle?Math.floor(Math.random()*tracks.length):idx+1,true)};
+audio.onerror=()=>{if($("server").value==="online")toast("Stream bağlantısı kurulamadı. URL'yi kontrol et.")};
+seek.oninput=()=>{if(audio.duration&&isFinite(audio.duration))audio.currentTime=seek.value/100*audio.duration};
+vol.oninput=()=>audio.volume=vol.value;
+$("next").onclick=()=>{if(tracks.length){addHist();load(shuffle?Math.floor(Math.random()*tracks.length):idx+1,true)}};
+$("prev").onclick=()=>{if(tracks.length)load(idx-1,true)};
+$("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.borderColor=shuffle?"var(--a)":"var(--l)";toast(shuffle?"Karıştırma açık":"Karıştırma kapalı")};
+
+async function connectStream(){
+  const url=$("stream").value.trim();
+  if(!url){toast("Önce Stream URL gir.");return}
+  audio.pause();audio.src=url;$("modeLabel").textContent="CANLI STREAM";$("title").textContent=$("station").value||"SLIVE RADYO";$("artist").textContent="Gerçek internet yayını";
+  $("streamState").textContent="BAĞLANIYOR";$("serverBadge").textContent="Bağlanıyor...";
+  try{await audio.play();$("streamState").textContent="BAĞLI";$("serverBadge").textContent="Yayın sunucusu bağlı";$("liveText").textContent="GERÇEK STREAM";toast("Stream bağlandı")}
+  catch(e){$("streamState").textContent="KONTROL ET";$("serverBadge").textContent="Bağlantı bekliyor";toast("Tarayıcı stream'i oynatamadı")}
+}
+
+$("files").onchange=e=>addFiles(e.target.files);
+$("files2").onchange=e=>addFiles(e.target.files);
+$("clear").onclick=clearAll;$("clear2").onclick=clearAll;
+
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");$(b.dataset.tab).classList.add("active");
+});
+
+$("save").onclick=()=>{
+  const c={station:$("station").value.trim()||"SLIVE RADYO",stream:$("stream").value.trim(),server:$("server").value};
+  localStorage.setItem("slive_config",JSON.stringify(c));
+  applyConfig(c);toast("Ayarlar kaydedildi");
+};
+$("connect").onclick=connectStream;
+
+function applyConfig(c){
+  $("station").value=c.station||"SLIVE RADYO";$("stream").value=c.stream||"";$("server").value=c.server||"offline";
+  $("stationBadge").textContent=$("station").value;
+  $("serverBadge").textContent=c.server==="online"?"Yayın sunucusu bağlı":"Henüz bağlı değil";
+  $("streamState").textContent=c.server==="online"?"BAĞLI":"VPS BEKLİYOR";
+}
+$("add").onclick=()=>{
+  if(!$("time").value||!$("name").value.trim())return;
+  schedule.push({time:$("time").value,name:$("name").value.trim()});
+  schedule.sort((a,b)=>a.time.localeCompare(b.time));
+  localStorage.setItem("slive_schedule",JSON.stringify(schedule));render();toast("Program eklendi");
+};
+window.delSlot=i=>{schedule.splice(i,1);localStorage.setItem("slive_schedule",JSON.stringify(schedule));render();toast("Program silindi")};
+
+(async()=>{
+  const c=JSON.parse(localStorage.getItem("slive_config")||"null")||{station:"SLIVE RADYO",stream:"",server:"offline"};
+  applyConfig(c);render();
+  try{await openDB();await loadSavedTracks()}catch(e){toast("Kalıcı playlist desteği başlatılamadı")}
+})();
+</script>
+</body>
+</html>
