@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SLIVE RADYO</title>
+<title>SLIVE RADYO • Müziğin Özgür Frekansı</title>
 <meta name="description" content="SLIVE RADYO - internet radyo ve canlı yayın platformu">
 <style>
 :root{--bg:#090611;--p:#151020;--p2:#1d162b;--t:#f7f2ff;--m:#aaa0b8;--a:#c56cff;--a2:#7c4dff;--d:#ff4d6d;--ok:#49e29a;--l:#2d2438}
@@ -37,7 +37,7 @@ input[type=range]{width:100%;accent-color:var(--a)}
 .times{font-size:10px;color:var(--m)}
 .controls{display:flex;justify-content:center;gap:9px;margin:12px}
 .btn{width:44px;height:44px;border-radius:50%;padding:0}.btn.main{width:56px;height:56px;font-size:18px}
-.vol{display:flex;gap:8px;align-items:center}.track b{font-size:13px}.track small{display:block;color:var(--m);font-size:10px}
+.vol{display:flex;gap:8px;align-items:center}.track b{font-size:13px}.track small{display:block;color:var(--m);font-size:10px}.track.clickable{cursor:pointer;border-radius:10px;padding-left:8px;padding-right:8px}.track.clickable:hover{background:#21172f;border-color:var(--a)}
 .badge{font-size:10px;padding:5px 8px;border-radius:99px;background:#282033;white-space:nowrap}
 .ok{background:#11251b;color:#aaffd0}.warn{background:#2b2110;color:#ffd98a}.empty{color:var(--m);font-size:12px;padding:18px 0}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -99,7 +99,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
   <div class="status"><span>Gerçek stream</span><span class="badge" id="streamState">VPS BEKLİYOR</span></div>
   <div class="status"><span>AutoDJ</span><span class="badge">VPS BEKLİYOR</span></div>
   <div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div>
-  <div class="notice">💡 Playlist artık tarayıcıda kalıcı saklanabilir. Gerçek 24/7 yayın için ileride VPS + yayın sunucusu bağlanacak.</div>
+  <div class="notice">🎧 <b>Müziğin Özgür Frekansı</b><br>Kuruluş: 03 Ekim 2026 • 00:20<br><br>🎵 Playlistte istediğin parçaya tıklayarak doğrudan çalabilirsin.<br><br>💡 Playlist artık tarayıcıda kalıcı saklanabilir. Gerçek 24/7 yayın için ileride VPS + yayın sunucusu bağlanacak.</div>
 </div>
 </div>
 
@@ -125,9 +125,17 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
 </div>
 
 <div class="card section">
+  <h2>📻 SLIVE RADYO</h2>
+  <div class="status"><span>Slogan</span><span class="badge ok">Müziğin Özgür Frekansı</span></div>
+  <div class="status"><span>Kuruluş</span><span class="badge">03.10.2026 • 00:20</span></div>
+  <div class="status"><span>Yayın kimliği</span><span class="badge ok">SLIVE RADYO</span></div>
+  <div class="notice">🎉 Bu tarih ve saat SLIVE RADYO'nun kuruluş anıdır.</div>
+</div>
+
+<div class="card section">
   <h2>📊 Sistem</h2>
   <div class="status"><span>İstasyon</span><span class="badge ok" id="stationBadge">SLIVE RADYO</span></div>
-  <div class="status"><span>Sürüm</span><span class="badge">v0.4</span></div>
+  <div class="status"><span>Sürüm</span><span class="badge">v0.5 FINAL • PLAYLIST DIRECT</span></div>
   <div class="status"><span>Playlist saklama</span><span class="badge ok">AKTİF</span></div>
   <div class="status"><span>Sunucu</span><span class="badge" id="serverBadge">Henüz bağlı değil</span></div>
 </div>
@@ -147,6 +155,13 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
     <button class="action" id="connect">Stream'i Bağla</button>
   </div>
   <div class="notice">Gerçek stream seçildiğinde yerel MP3 modu kapanır ve player stream'i dinlemeye geçer. VPS olmadan bu alan sadece hazırlık amaçlıdır.</div>
+</div>
+
+<div class="card section">
+  <h2>🏷️ İstasyon Kimliği</h2>
+  <div class="field"><label>Slogan</label><input value="Müziğin Özgür Frekansı" readonly></div>
+  <div class="field"><label>Kuruluş tarihi</label><input value="03.10.2026 00:20" readonly></div>
+  <div class="notice">Bu bilgiler SLIVE RADYO'nun sabit istasyon kimliğidir.</div>
 </div>
 
 <div class="card section">
@@ -177,7 +192,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
 </div>
 </section>
 
-<footer>SLIVE RADYO • v0.4 • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer>
+<footer>SLIVE RADYO • v0.5 FINAL • PLAYLIST DIRECT • Yazılım çekirdeği tamamlandı •  • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -200,12 +215,14 @@ function esc(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",
 
 function render(){
   $("list").innerHTML=tracks.length?tracks.map((t,i)=>`
-    <div class="track"><span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>Kalıcı yerel parça</small></div>
-      <div class="track-actions"><button class="danger" onclick="removeTrack(${i})">Sil</button></div>
+    <div class="track clickable" onclick="playTrack(${i})" title="Bu parçayı hemen çal">
+      <span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>▶ Hemen çal • Kalıcı yerel parça</small></div>
+      <div class="track-actions"><button class="danger" onclick="event.stopPropagation();removeTrack(${i})">Sil</button></div>
     </div>`).join(""):'<div class="empty">MP3 eklediğinde burada görünecek.</div>';
   $("adminList").innerHTML=tracks.length?tracks.map((t,i)=>`
-    <div class="track"><span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>Kalıcı yerel parça</small></div>
-      <button class="danger" onclick="removeTrack(${i})">Sil</button></div>`).join(""):'<div class="empty">Henüz parça yok.</div>';
+    <div class="track clickable" onclick="playTrack(${i})" title="Bu parçayı hemen çal">
+      <span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>▶ Hemen çal • Kalıcı yerel parça</small></div>
+      <button class="danger" onclick="event.stopPropagation();removeTrack(${i})">Sil</button></div>`).join(""):'<div class="empty">Henüz parça yok.</div>';
   const next=tracks.length?tracks.map((t,i)=>({t,i})).filter(x=>x.i!==idx).slice(0,4):[];
   $("up").innerHTML=next.length?next.map(x=>`<div class="track"><span>${x.i+1}</span><div><b>${esc(x.t.name)}</b><small>Playlist</small></div></div>`).join(""):'<div class="empty">Henüz playlist eklenmedi.</div>';
   $("history").innerHTML=hist.length?hist.slice(-6).reverse().map(x=>`<div class="track"><b>${esc(x)}</b><small>Çalındı</small></div>`).join(""):'<div class="empty">Henüz parça çalmadı.</div>';
@@ -257,6 +274,12 @@ async function loadSavedTracks(){
   }catch(e){toast("Playlist yüklenemedi");}
 }
 
+window.playTrack=(i)=>{
+  if(!tracks[i])return;
+  if(tracks.length && idx!==i && !audio.paused) addHist();
+  load(i,true);
+  toast("▶ "+tracks[i].name);
+};
 function load(i,auto=false){
   if(!tracks.length)return;
   idx=(i+tracks.length)%tracks.length;
