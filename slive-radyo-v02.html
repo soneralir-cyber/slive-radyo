@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLIVE RADYO</title>
+<meta name="description" content="SLIVE RADYO - internet radyo altyapısı">
+<style>
+:root{--bg:#090611;--panel:#151020;--panel2:#1d162b;--text:#f7f2ff;--muted:#aaa0b8;--accent:#c56cff;--accent2:#7c4dff;--danger:#ff4d6d;--line:#2d2438}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#24103a 0,#090611 48%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input{font:inherit}.wrap{max-width:1100px;margin:auto;padding:18px}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:10px 0 22px}
+.logo{font-size:24px;font-weight:900;letter-spacing:.8px}.logo span{color:var(--accent)}
+.live{display:flex;align-items:center;gap:8px;background:#21101a;border:1px solid #542437;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800}.dot{width:9px;height:9px;background:var(--danger);border-radius:50%;box-shadow:0 0 12px var(--danger)}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:18px}.card{background:linear-gradient(145deg,#181122,#100b18);border:1px solid var(--line);border-radius:24px;box-shadow:0 20px 60px #0005}
+.now{padding:28px;min-height:390px;display:flex;flex-direction:column;justify-content:space-between}.eyebrow{color:var(--accent);font-size:12px;font-weight:900;letter-spacing:1.5px}.title{font-size:clamp(32px,6vw,64px);line-height:.98;margin:10px 0;font-weight:950}.subtitle{color:var(--muted);font-size:15px}.disc{width:210px;height:210px;border-radius:50%;margin:8px auto 20px;background:repeating-radial-gradient(circle,#181818 0 5px,#2d2d2d 6px 7px);border:10px solid #0b0b0b;box-shadow:0 0 0 2px #3a3044,0 20px 50px #0008;position:relative;animation:spin 7s linear infinite;animation-play-state:paused}.disc.playing{animation-play-state:running}.disc:after{content:"SLIVE";position:absolute;inset:62px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:14px;font-weight:900;box-shadow:0 0 30px #a855f755}.progress{width:100%;accent-color:var(--accent)}.times{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:5px}
+.controls{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px}.btn{border:1px solid var(--line);background:var(--panel2);color:white;width:46px;height:46px;border-radius:50%;cursor:pointer}.btn:hover{border-color:var(--accent)}.btn.main{width:58px;height:58px;background:linear-gradient(135deg,var(--accent2),var(--accent));border:0;font-size:20px}.vol{display:flex;align-items:center;gap:8px;margin-top:12px}.vol input{flex:1;accent-color:var(--accent)}
+.side{padding:22px}.side h2,.section h2{margin:0 0 14px;font-size:18px}.track{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.track:last-child{border:0}.num{width:28px;color:var(--muted);font-size:12px}.track b{display:block;font-size:14px}.track small{color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.section{padding:22px}.empty{color:var(--muted);font-size:13px;padding:20px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.action{border:1px solid var(--line);background:var(--panel2);color:#fff;border-radius:12px;padding:10px 13px;cursor:pointer}.action:hover{border-color:var(--accent)}input[type=file]{display:none}
+.status{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.badge{font-size:11px;padding:5px 9px;border-radius:999px;background:#282033;color:#d9cbe7}.badge.ready{color:#aaffd0;background:#11251b}
+.schedule{display:grid;gap:8px}.slot{padding:12px;border:1px solid var(--line);border-radius:12px;background:#120d1a}.slot strong{color:var(--accent)}
+footer{text-align:center;color:#756b82;font-size:12px;padding:28px 0 12px}
+@keyframes spin{to{transform:rotate(360deg)}}@media(max-width:780px){.hero,.grid{grid-template-columns:1fr}.now{min-height:auto}.disc{width:170px;height:170px}.disc:after{inset:49px}.title{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">🎧 <span>SLIVE</span> RADYO</div><div class="live"><i class="dot"></i><span id="liveText">CANLI ALTYAPI HAZIR</span></div></header>
+
+<section class="hero">
+<div class="card now">
+  <div><div class="eyebrow">ŞİMDİ ÇALIYOR</div><div class="title" id="songTitle">SLIVE RADYO</div><div class="subtitle" id="songArtist">Yayın sunucusu bağlandığında gerçek yayın burada görünecek.</div></div>
+  <div>
+    <div class="disc" id="disc"></div>
+    <audio id="audio" preload="metadata"></audio>
+    <input class="progress" id="progress" type="range" min="0" max="100" value="0">
+    <div class="times"><span id="current">0:00</span><span id="duration">0:00</span></div>
+    <div class="controls">
+      <button class="btn" id="prev" title="Önceki">⏮</button>
+      <button class="btn main" id="play" title="Oynat">▶</button>
+      <button class="btn" id="next" title="Sonraki">⏭</button>
+      <button class="btn" id="shuffle" title="Karıştır">🔀</button>
+    </div>
+    <div class="vol">🔊 <input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+  </div>
+</div>
+
+<div class="card side">
+  <h2>⏭ Sıradaki</h2>
+  <div id="upNext"><div class="empty">Henüz playlist eklenmedi.</div></div>
+  <h2 style="margin-top:24px">📡 Yayın Durumu</h2>
+  <div class="status"><span>Web player</span><span class="badge ready">HAZIR</span></div>
+  <div class="status"><span>Gerçek stream</span><span class="badge">VPS BEKLİYOR</span></div>
+  <div class="status"><span>AutoDJ</span><span class="badge">VPS BEKLİYOR</span></div>
+  <div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div>
+</div>
+</section>
+
+<section class="grid">
+<div class="card section"><h2>🎵 Playlist</h2><div class="actions"><label class="action" for="files">+ MP3 Ekle</label><input id="files" type="file" accept="audio/*" multiple><button class="action" id="clear">Playlisti Temizle</button></div><div id="playlist"><div class="empty">Bilgisayarından MP3 eklediğinde burada görünecek.</div></div></div>
+<div class="card section"><h2>🕘 Son Çalanlar</h2><div id="history"><div class="empty">Henüz parça çalmadı.</div></div></div>
+<div class="card section"><h2>📅 Program Akışı</h2><div class="schedule"><div class="slot"><strong>00:00</strong> • Gece Yayını</div><div class="slot"><strong>12:00</strong> • SLIVE Öğle</div><div class="slot"><strong>18:00</strong> • Akşam Seçkisi</div><div class="slot"><strong>21:00</strong> • Soner ile Canlı</div></div></div>
+<div class="card section"><h2>⚙️ Yayın Altyapısı</h2><p class="subtitle">Bu sürüm gerçek stream'e hazırdır. VPS + yayın sunucusu eklendiğinde player, AutoDJ ve canlı DJ bağlantısı aynı arayüz üzerinden çalışacak şekilde tasarlanmıştır.</p><div class="status"><span>Stream URL</span><span class="badge">CONFIG</span></div><div class="status"><span>İstasyon adı</span><span class="badge ready">SLIVE RADYO</span></div></div>
+</section>
+<footer>SLIVE RADYO • v0.2 • Yayın hakları ve lisanslar tamamlanmadan telifli müzikle kamuya açık yayın yapılmamalıdır.</footer>
+</div>
+<script>
+const audio=document.getElementById('audio'), play=document.getElementById('play'), disc=document.getElementById('disc'), progress=document.getElementById('progress'), volume=document.getElementById('volume');
+let tracks=[],index=0,history=[],shuffle=false;
+const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function render(){const p=document.getElementById('playlist'),u=document.getElementById('upNext'),h=document.getElementById('history');
+p.innerHTML=tracks.length?tracks.map((t,i)=>`<div class="track"><span class="num">${i+1}</span><div><b>${t.name}</b><small>Yerel parça</small></div></div>`).join(""):'<div class="empty">Bilgisayarından MP3 eklediğinde burada görünecek.</div>';
+const next=tracks.length?tracks.map((t,i)=>({t,i})).filter(x=>x.i!==index).slice(0,4):[];
+u.innerHTML=next.length?next.map(x=>`<div class="track"><span class="num">${x.i+1}</span><div><b>${x.t.name}</b><small>Playlist</small></div></div>`).join(""):'<div class="empty">Henüz playlist eklenmedi.</div>';
+h.innerHTML=history.length?history.slice(-6).reverse().map((x,i)=>`<div class="track"><span class="num">${i+1}</span><div><b>${x}</b><small>Çalındı</small></div></div>`).join(""):'<div class="empty">Henüz parça çalmadı.</div>';
+}
+function load(i,autoplay=false){if(!tracks.length)return;index=(i+tracks.length)%tracks.length;audio.src=tracks[index].url;document.getElementById('songTitle').textContent=tracks[index].name;document.getElementById('songArtist').textContent="SLIVE RADYO • Yerel demo yayın";progress.value=0;render();if(autoplay)audio.play()}
+function addHistory(){if(!tracks.length)return;history.push(tracks[index].name);if(history.length>20)history.shift();render()}
+play.onclick=()=>{if(!tracks.length){alert("Önce bir MP3 ekle.");return} if(audio.paused)audio.play();else audio.pause()};
+audio.onplay=()=>{play.textContent="⏸";disc.classList.add("playing");document.getElementById('liveText').textContent="DEMO CANLI"};
+audio.onpause=()=>{play.textContent="▶";disc.classList.remove("playing")};
+audio.ontimeupdate=()=>{if(audio.duration)progress.value=audio.currentTime/audio.duration*100;document.getElementById('current').textContent=fmt(audio.currentTime)};
+audio.onloadedmetadata=()=>document.getElementById('duration').textContent=fmt(audio.duration);
+progress.oninput=()=>{if(audio.duration)audio.currentTime=progress.value/100*audio.duration};
+volume.oninput=()=>audio.volume=volume.value;
+document.getElementById('next').onclick=()=>{addHistory();load(shuffle?Math.floor(Math.random()*tracks.length):index+1,true)};
+document.getElementById('prev').onclick=()=>load(index-1,true);
+document.getElementById('shuffle').onclick=()=>{shuffle=!shuffle;document.getElementById('shuffle').style.borderColor=shuffle?"var(--accent)":"var(--line)"};
+audio.onended=()=>{addHistory();load(shuffle?Math.floor(Math.random()*tracks.length):index+1,true)};
+document.getElementById('files').onchange=e=>{[...e.target.files].forEach(f=>tracks.push({name:f.name,url:URL.createObjectURL(f)}));if(tracks.length===e.target.files.length)load(0);render()};
+document.getElementById('clear').onclick=()=>{tracks.forEach(t=>URL.revokeObjectURL(t.url));tracks=[];audio.pause();audio.removeAttribute('src');document.getElementById('songTitle').textContent="SLIVE RADYO";document.getElementById('songArtist').textContent="Yayın sunucusu bağlandığında gerçek yayın burada görünecek.";render()};
+render();
+</script>
+</body>
+</html>
