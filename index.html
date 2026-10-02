@@ -40,7 +40,7 @@ input[type=range]{width:100%;accent-color:var(--a)}
 .vol{display:flex;gap:8px;align-items:center}.track b{font-size:13px}.track small{display:block;color:var(--m);font-size:10px}.track.clickable{cursor:pointer;border-radius:10px;padding-left:8px;padding-right:8px}.track.clickable:hover{background:#21172f;border-color:var(--a)}
 .badge{font-size:10px;padding:5px 8px;border-radius:99px;background:#282033;white-space:nowrap}
 .ok{background:#11251b;color:#aaffd0}.warn{background:#2b2110;color:#ffd98a}.empty{color:var(--m);font-size:12px;padding:18px 0}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.playlist-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.playlist-search{flex:1;min-width:180px;background:#0e0a15;color:#fff;border:1px solid var(--l);border-radius:10px;padding:10px}.move-btn{border:1px solid var(--l);background:#120d1a;color:#fff;border-radius:8px;padding:5px 8px;cursor:pointer}.move-btn:hover{border-color:var(--a)}
 input[type=file]{display:none}
 .field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;color:var(--m)}
 .field input,.field select{background:#0e0a15;color:#fff;border:1px solid var(--l);border-radius:10px;padding:10px;width:100%}
@@ -99,7 +99,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
   <div class="status"><span>Gerçek stream</span><span class="badge" id="streamState">VPS BEKLİYOR</span></div>
   <div class="status"><span>AutoDJ</span><span class="badge">VPS BEKLİYOR</span></div>
   <div class="status"><span>Canlı DJ</span><span class="badge">HAZIRLANIYOR</span></div>
-  <div class="notice">🎧 <b>Müziğin Özgür Frekansı</b><br>Kuruluş: 03 Ekim 2026 • 00:20<br><br>🎵 Playlistte istediğin parçaya tıklayarak doğrudan çalabilirsin.<br><br>💡 Playlist artık tarayıcıda kalıcı saklanabilir. Gerçek 24/7 yayın için ileride VPS + yayın sunucusu bağlanacak.</div>
+  <div class="notice">🎧 <b>Müziğin Özgür Frekansı</b><br>Kuruluş: 03 Ekim 2026 • 00:20<br><br>🎵 Playlistte istediğin parçaya tıklayarak doğrudan çalabilir, 🔎 arayabilir ve ▲▼ ile sıralayabilirsin.<br><br>💡 Playlist artık tarayıcıda kalıcı saklanabilir. Gerçek 24/7 yayın için ileride VPS + yayın sunucusu bağlanacak.</div>
 </div>
 </div>
 
@@ -111,6 +111,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
     <input id="files" type="file" accept="audio/*" multiple>
     <button class="action" id="clear">Temizle</button>
   </div>
+  <div class="playlist-tools"><input id="playlistSearch" class="playlist-search" placeholder="🔎 Playlistte müzik ara..."></div>
   <div id="list"><div class="empty">MP3 eklediğinde burada görünecek.</div></div>
 </div>
 
@@ -135,7 +136,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
 <div class="card section">
   <h2>📊 Sistem</h2>
   <div class="status"><span>İstasyon</span><span class="badge ok" id="stationBadge">SLIVE RADYO</span></div>
-  <div class="status"><span>Sürüm</span><span class="badge">v0.5 FINAL • PLAYLIST DIRECT</span></div>
+  <div class="status"><span>Sürüm</span><span class="badge">v0.5 FINAL • PLAYLIST SEARCH & ORDER</span></div>
   <div class="status"><span>Playlist saklama</span><span class="badge ok">AKTİF</span></div>
   <div class="status"><span>Sunucu</span><span class="badge" id="serverBadge">Henüz bağlı değil</span></div>
 </div>
@@ -179,6 +180,7 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
     <input id="files2" type="file" accept="audio/*" multiple>
     <button class="danger" id="clear2">Playlisti Sıfırla</button>
   </div>
+  <div class="playlist-tools"><input id="adminPlaylistSearch" class="playlist-search" placeholder="🔎 Playlistte müzik ara..."></div>
   <div id="adminList" class="empty">Henüz parça yok.</div>
 </div>
 
@@ -192,14 +194,14 @@ footer{text-align:center;color:#756b82;font-size:10px;padding:24px}
 </div>
 </section>
 
-<footer>SLIVE RADYO • v0.5 FINAL • PLAYLIST DIRECT • Yazılım çekirdeği tamamlandı •  • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer>
+<footer>SLIVE RADYO • v0.5 FINAL • PLAYLIST SEARCH & ORDER • Yazılım çekirdeği tamamlandı •  • Telifli müzikle kamuya açık yayın için gerekli hak ve lisanslar tamamlanmalıdır.</footer>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 const $=id=>document.getElementById(id);
 const audio=$("audio"),disc=$("disc"),play=$("play"),seek=$("seek"),vol=$("vol");
-let tracks=[],idx=0,hist=JSON.parse(localStorage.getItem("slive_history")||"[]"),shuffle=false;
+let tracks=[],idx=0,hist=JSON.parse(localStorage.getItem("slive_history")||"[]"),shuffle=false;let playlistQuery="";
 let schedule=JSON.parse(localStorage.getItem("slive_schedule")||"null")||[
  {time:"00:00",name:"Gece Yayını"},{time:"12:00",name:"SLIVE Öğle"},
  {time:"18:00",name:"Akşam Seçkisi"},{time:"21:00",name:"Soner ile Canlı"}
@@ -214,22 +216,34 @@ function fmt(s){s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padS
 function esc(v){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 
 function render(){
-  $("list").innerHTML=tracks.length?tracks.map((t,i)=>`
-    <div class="track clickable" onclick="playTrack(${i})" title="Bu parçayı hemen çal">
-      <span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>▶ Hemen çal • Kalıcı yerel parça</small></div>
-      <div class="track-actions"><button class="danger" onclick="event.stopPropagation();removeTrack(${i})">Sil</button></div>
-    </div>`).join(""):'<div class="empty">MP3 eklediğinde burada görünecek.</div>';
-  $("adminList").innerHTML=tracks.length?tracks.map((t,i)=>`
-    <div class="track clickable" onclick="playTrack(${i})" title="Bu parçayı hemen çal">
-      <span>${i+1}</span><div style="flex:1"><b>${esc(t.name)}</b><small>▶ Hemen çal • Kalıcı yerel parça</small></div>
-      <button class="danger" onclick="event.stopPropagation();removeTrack(${i})">Sil</button></div>`).join(""):'<div class="empty">Henüz parça yok.</div>';
+  const q=playlistQuery.trim().toLocaleLowerCase("tr-TR");
+  const visible=tracks.map((t,i)=>({t,i})).filter(x=>!q||x.t.name.toLocaleLowerCase("tr-TR").includes(q));
+  $("list").innerHTML=visible.length?visible.map(x=>`
+    <div class="track clickable" onclick="playTrack(${x.i})" title="Bu parçayı hemen çal">
+      <span>${x.i+1}</span><div style="flex:1"><b>${esc(x.t.name)}</b><small>▶ Hemen çal • ${q?"Arama sonucu":"Kalıcı yerel parça"}</small></div>
+      <div class="track-actions">
+        <button class="move-btn" onclick="event.stopPropagation();moveTrack(${x.i},-1)" title="Yukarı">▲</button>
+        <button class="move-btn" onclick="event.stopPropagation();moveTrack(${x.i},1)" title="Aşağı">▼</button>
+        <button class="danger" onclick="event.stopPropagation();removeTrack(${x.i})">Sil</button>
+      </div>
+    </div>`).join(""):'<div class="empty">'+(q?"Aranan müzik bulunamadı.":"MP3 eklediğinde burada görünecek.")+'</div>';
+
+  $("adminList").innerHTML=visible.length?visible.map(x=>`
+    <div class="track clickable" onclick="playTrack(${x.i})" title="Bu parçayı hemen çal">
+      <span>${x.i+1}</span><div style="flex:1"><b>${esc(x.t.name)}</b><small>▶ Hemen çal • Sıra: ${x.i+1}</small></div>
+      <div class="track-actions">
+        <button class="move-btn" onclick="event.stopPropagation();moveTrack(${x.i},-1)" title="Yukarı">▲</button>
+        <button class="move-btn" onclick="event.stopPropagation();moveTrack(${x.i},1)" title="Aşağı">▼</button>
+        <button class="danger" onclick="event.stopPropagation();removeTrack(${x.i})">Sil</button>
+      </div>
+    </div>`).join(""):'<div class="empty">'+(q?"Aranan müzik bulunamadı.":"Henüz parça yok.")+'</div>';
+
   const next=tracks.length?tracks.map((t,i)=>({t,i})).filter(x=>x.i!==idx).slice(0,4):[];
   $("up").innerHTML=next.length?next.map(x=>`<div class="track"><span>${x.i+1}</span><div><b>${esc(x.t.name)}</b><small>Playlist</small></div></div>`).join(""):'<div class="empty">Henüz playlist eklenmedi.</div>';
   $("history").innerHTML=hist.length?hist.slice(-6).reverse().map(x=>`<div class="track"><b>${esc(x)}</b><small>Çalındı</small></div>`).join(""):'<div class="empty">Henüz parça çalmadı.</div>';
   $("scheduleView").innerHTML=schedule.map(s=>`<div class="slot"><strong>${esc(s.time)}</strong> • ${esc(s.name)}</div>`).join("");
   $("adminSchedule").innerHTML=schedule.map((s,i)=>`<div class="row"><span>${esc(s.time)} • ${esc(s.name)}</span><button class="danger" onclick="delSlot(${i})">Sil</button></div>`).join("");
 }
-
 function openDB(){
   return new Promise((resolve,reject)=>{
     const req=indexedDB.open("slive_radio_v04",1);
@@ -269,7 +283,13 @@ function clearDB(){
 async function loadSavedTracks(){
   try{
     const saved=await getAllTracks();
-    tracks=saved.map(x=>({id:x.id,name:x.name,blob:x.blob,url:URL.createObjectURL(x.blob)}));
+    const order=JSON.parse(localStorage.getItem("slive_order")||"[]");
+    const byId=new Map(saved.map(x=>[x.id,x]));
+    const ordered=[];
+    order.forEach(id=>{if(byId.has(id)){ordered.push(byId.get(id));byId.delete(id)}});
+    byId.forEach(x=>ordered.push(x));
+    tracks=ordered.map(x=>({id:x.id,name:x.name,blob:x.blob,url:URL.createObjectURL(x.blob)}));
+    localStorage.setItem("slive_order",JSON.stringify(tracks.map(x=>x.id)));
     render();
   }catch(e){toast("Playlist yüklenemedi");}
 }
@@ -300,15 +320,25 @@ async function addFiles(fs){
   try{
     for(const f of files)await putTrack(f.name,f);
     await loadSavedTracks();
+    localStorage.setItem("slive_order",JSON.stringify(tracks.map(x=>x.id)));
     if(tracks.length===files.length)load(0);
     toast(files.length+" parça playlist'e eklendi");
   }catch(e){toast("Parçalar kaydedilemedi");}
 }
+window.moveTrack=(i,dir)=>{
+  const j=i+dir;
+  if(j<0||j>=tracks.length)return;
+  const temp=tracks[i];tracks[i]=tracks[j];tracks[j]=temp;
+  const order=tracks.map(t=>t.id);
+  localStorage.setItem("slive_order",JSON.stringify(order));
+  if(idx===i)idx=j;else if(idx===j)idx=i;
+  render();toast(dir<0?"Parça yukarı taşındı":"Parça aşağı taşındı");
+};
 window.removeTrack=async i=>{
   const t=tracks[i];if(!t)return;
   if(t.id)await deleteTrackDB(t.id);
   URL.revokeObjectURL(t.url);
-  tracks.splice(i,1);
+  tracks.splice(i,1);localStorage.setItem("slive_order",JSON.stringify(tracks.map(x=>x.id)));
   if(!tracks.length){audio.pause();audio.removeAttribute("src");$("title").textContent=$("station").value||"SLIVE RADYO";$("artist").textContent="Playlist boş."}
   else if(i===idx){idx=Math.min(idx,tracks.length-1);load(idx)}
   else if(i<idx)idx--;
@@ -316,7 +346,7 @@ window.removeTrack=async i=>{
 };
 async function clearAll(){
   if(!confirm("Tüm yerel playlist silinsin mi?"))return;
-  await clearDB();tracks.forEach(t=>URL.revokeObjectURL(t.url));tracks=[];
+  await clearDB();tracks.forEach(t=>URL.revokeObjectURL(t.url));tracks=[];localStorage.removeItem("slive_order");
   audio.pause();audio.removeAttribute("src");idx=0;
   $("title").textContent=$("station").value||"SLIVE RADYO";$("artist").textContent="Playlist boş.";
   render();toast("Playlist temizlendi");
@@ -380,6 +410,10 @@ $("add").onclick=()=>{
   localStorage.setItem("slive_schedule",JSON.stringify(schedule));render();toast("Program eklendi");
 };
 window.delSlot=i=>{schedule.splice(i,1);localStorage.setItem("slive_schedule",JSON.stringify(schedule));render();toast("Program silindi")};
+
+function setPlaylistSearch(value){playlistQuery=value||"";render()}
+$("playlistSearch").oninput=e=>setPlaylistSearch(e.target.value);
+$("adminPlaylistSearch").oninput=e=>setPlaylistSearch(e.target.value);
 
 (async()=>{
   const c=JSON.parse(localStorage.getItem("slive_config")||"null")||{station:"SLIVE RADYO",stream:"",server:"offline"};
