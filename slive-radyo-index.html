@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09090f">
+<title>SLIVE RADYO</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#09090f;color:#f8f7fb;font-family:Inter,system-ui,sans-serif}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 75% 10%,#4c1d9550,transparent 30%);pointer-events:none}
+.wrap{max-width:1120px;margin:auto;padding:0 22px}header{height:76px;border-bottom:1px solid #252532;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}.logo b{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#c4b5fd,#7c3aed)}
+.logo span{font-size:14px;font-weight:800;letter-spacing:2px}.logo small{display:block;font-size:8px;color:#888;letter-spacing:4px}
+.hero{min-height:430px;display:flex;align-items:center;justify-content:space-between}.hero h1{font-size:clamp(44px,7vw,76px);line-height:1;letter-spacing:-4px;margin:15px 0}
+.hero h1 i{font-style:normal;color:#a78bfa}.hero p{color:#9998a5;max-width:500px;line-height:1.7}
+.hero button,.admin label{border:0;border-radius:12px;padding:13px 18px;cursor:pointer;margin:12px 8px 0 0}
+.hero button:first-of-type{background:#fff;color:#09090f;font-weight:800}.hero button:not(:first-of-type){background:#181821;color:#fff;border:1px solid #292936}
+.disc{width:290px;height:290px;border-radius:50%;display:grid;place-items:center;background:repeating-radial-gradient(circle,#191921 0 2px,#08080d 3px 7px);box-shadow:0 0 80px #7c3aed33;animation:spin 14s linear infinite;font-size:30px;font-weight:900}
+@keyframes spin{to{transform:rotate(360deg)}}.player,.card,.admin{background:#111119;border:1px solid #252532;border-radius:18px}
+.player{display:grid;grid-template-columns:72px 1fr auto 130px;gap:18px;align-items:center;padding:18px}.art{height:72px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#7c3aed,#312e81);font-size:30px}
+.player small,.card>small,.admin small{font-size:9px;letter-spacing:2px;color:#a78bfa;font-weight:800}.player h2{margin:5px 0;font-size:17px}.player p{margin:0 0 10px;color:#9998a5;font-size:12px}
+.player input{width:100%;accent-color:#a78bfa}.player>div>div{display:flex;justify-content:space-between;color:#666674;font-size:9px}
+.controls{display:flex;gap:7px}.controls button{border:0;border-radius:50%;width:40px;height:40px;background:#20202b;color:#fff;cursor:pointer}.controls #play{width:50px;height:50px;background:#fff;color:#111}.vol{accent-color:#a78bfa}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:20px 0}.card{padding:20px}.card h3{margin:7px 0 15px}.card h3 button{float:right;background:#20202a;color:#fff;border:0;border-radius:9px;padding:7px}
+.empty{text-align:center;color:#666;padding:30px;font-size:12px;line-height:1.8}.empty em{font-style:normal;color:#999}
+.item{display:flex;gap:12px;align-items:center;border-top:1px solid #252532;padding:12px 0;font-size:12px}.item div{flex:1}.item span{display:block;color:#777;font-size:10px}.item button{background:none;border:0;color:#777}
+.admin{display:flex;align-items:center;gap:18px;padding:20px;margin-bottom:25px}.admin>div{flex:1}.admin p{margin:5px 0;color:#888;font-size:11px}.admin label{background:#a78bfa;color:#10091d;font-weight:800}.admin label input{display:none}
+.admin>button{background:none;color:#ff7187;border:1px solid #48202a;border-radius:12px;padding:12px}footer{padding:20px 0 30px;border-top:1px solid #252532;color:#555562;font-size:9px;display:flex;justify-content:space-between}
+@media(max-width:760px){.wrap{padding:0 14px}.hero{min-height:410px}.disc{position:absolute;right:-80px;opacity:.15}.hero h1{letter-spacing:-2px}.player{grid-template-columns:58px 1fr}.art{height:58px}.controls,.vol{grid-column:1/-1}.vol{width:100%}.cols{grid-template-columns:1fr}.admin{flex-wrap:wrap}.admin>div{flex-basis:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo"><b>S</b><span>SLIVE<small>RADYO</small></span></div><strong>🔴 CANLI</strong></header>
+<main>
+<section class="hero">
+<div><small>24/7 • MUSIC • VOICE</small><h1>Sesini aç.<br><i>SLIVE RADYO</i>'yu dinle.</h1>
+<p>Türkçe pop, slow ve yabancı müzik. Kendi radyomuzun ilk yayını.</p>
+<button id="start">▶ Dinlemeye Başla</button><button id="jump">Playlist</button></div>
+<div class="disc">S</div>
+</section>
+<section class="player">
+<div class="art">♫</div><div><small>ŞİMDİ ÇALIYOR</small><h2 id="title">SLIVE RADYO</h2><p id="artist">Yayın hazır • MP3 ekle</p>
+<input id="seek" type="range" min="0" max="100" value="0"><div><span id="time">00:00</span> <span id="dur">--:--</span></div></div>
+<div class="controls"><button id="prev">⏮</button><button id="play">▶</button><button id="next">⏭</button></div>
+<input id="vol" class="vol" type="range" min="0" max="1" step=".01" value=".8">
+</section>
+<section class="cols">
+<div class="card"><small>YAYIN AKIŞI</small><h3>Sıradaki Şarkılar <button id="shuffle">🔀</button></h3><div id="queue" class="empty">Henüz şarkı yok.<br><em>Yönetimden MP3 ekleyebilirsin.</em></div></div>
+<div class="card"><small>SON ÇALANLAR</small><h3>Geçmiş</h3><div id="history" class="empty">Yayın başladığında burada görünecek.</div></div>
+</section>
+<section class="admin"><div><small>YÖNETİM</small><h3>Kendi radyonu yönet.</h3><p>MP3 dosyalarını seç, sırayı oluştur ve yayına başla.</p></div>
+<label>＋ Şarkı Ekle<input id="files" type="file" accept="audio/*" multiple></label><button id="clear">Temizle</button></section>
+</main><footer>© 2026 SLIVE RADYO <span>v0.1</span></footer>
+</div>
+<audio id="audio"></audio>
+<script>
+const a=document.querySelector("#audio"),f=document.querySelector("#files"),q=document.querySelector("#queue"),h=document.querySelector("#history"),t=document.querySelector("#title"),ar=document.querySelector("#artist"),p=document.querySelector("#play"),st=document.querySelector("#start"),seek=document.querySelector("#seek"),tm=document.querySelector("#time"),du=document.querySelector("#dur");
+let L=[],C=-1,H=[];
+const fmt=s=>{if(!isFinite(s))return"00:00";s=Math.floor(s);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+const esc=s=>s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function nm(n){let x=n.replace(/\.[^.]+$/,"").split(" - ");return{x:x.length>1?x[1]:x[0],a:x.length>1?x[0]:"Yerel Yayın"}}
+function render(){q.innerHTML=L.length?L.map((x,i)=>`<div class="item"><b>${i+1}</b><div><strong>${esc(x.x)}</strong><span>${esc(x.a)}</span></div><button onclick="removeSong(${i})">✕</button></div>`).join(""):'<div class="empty">Henüz şarkı yok.<br><em>Yönetimden MP3 ekleyebilirsin.</em></div>';
+h.innerHTML=H.length?H.slice(0,8).map(x=>`<div class="item">♫<div><strong>${esc(x.x)}</strong><span>${esc(x.a)}</span></div></div>`).join(""):'<div class="empty">Yayın başladığında burada görünecek.</div>'}
+function load(i){if(!L[i])return;C=i;let x=L[i];a.src=x.url;t.textContent=x.x;ar.textContent=x.a;a.play().then(()=>set(1)).catch(()=>set(0))}
+function set(v){p.textContent=v?"❚❚":"▶";st.textContent=v?"❚❚ Durdur":"▶ Dinlemeye Başla"}
+function next(){if(!L.length)return;if(C>=0)H.unshift(L[C]);C=(C+1)%L.length;load(C);render()}
+function removeSong(i){URL.revokeObjectURL(L[i].url);L.splice(i,1);if(C>=L.length)C=L.length-1;render()}
+f.onchange=e=>{[...e.target.files].forEach(z=>{let n=nm(z.name);L.push({x:n.x,a:n.a,url:URL.createObjectURL(z)})});render();if(C<0)load(0);f.value=""};
+function toggle(){if(!L.length)return f.click();a.paused?load(C<0?0:C):(a.pause(),set(0))}
+p.onclick=toggle;st.onclick=toggle;document.querySelector("#next").onclick=next;
+document.querySelector("#prev").onclick=()=>L.length&&load((C-1+L.length)%L.length);
+document.querySelector("#vol").oninput=e=>a.volume=e.target.value;
+document.querySelector("#shuffle").onclick=()=>{L.sort(()=>Math.random()-.5);render()};
+document.querySelector("#clear").onclick=()=>{L.forEach(x=>URL.revokeObjectURL(x.url));L=[];C=-1;a.pause();t.textContent="SLIVE RADYO";ar.textContent="Yayın hazır • MP3 ekle";set(0);render()};
+document.querySelector("#jump").onclick=()=>document.querySelector(".cols").scrollIntoView({behavior:"smooth"});
+a.ontimeupdate=()=>{seek.value=a.duration?a.currentTime/a.duration*100:0;tm.textContent=fmt(a.currentTime)};
+a.onloadedmetadata=()=>du.textContent=fmt(a.duration);a.onended=next;seek.oninput=()=>a.duration&&(a.currentTime=seek.value/100*a.duration);a.volume=.8;render();
+</script>
+</body>
+</html>
