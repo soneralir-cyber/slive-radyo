@@ -1,0 +1,20 @@
+{
+  "name": "SLIVE RADYO",
+  "short_name": "SLIVE RADYO",
+  "description": "Müziğin Özgür Frekansı",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090611",
+  "theme_color": "#090611",
+  "orientation": "portrait-primary",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
